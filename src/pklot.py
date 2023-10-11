@@ -1,6 +1,4 @@
-import argparse
-import os
-import sys
+import argparse, os, sys, json
 import matplotlib.pyplot as plt
 import torch
 # import detectron2
@@ -23,12 +21,13 @@ def argumenterParser():
                       default='train', type=str)
     parser.add_argument('--lr', dest='learning_rate', default= '0.0125', type=float)
     parser.add_argument('--it', dest='max_iteration', default= '1500', type=int)
-    parser.add_argument('--workers', dest='number_of_workers', default= '4', type=int)
+    parser.add_argument('--workers', dest='number_of_workers', default= '2', type=int)
     parser.add_argument('--ims_per_batch', dest='ims_per_batch', default= '4', type=int)
     parser.add_argument('--eval_period', dest='evaluation_period', default= '500', type=int)
     parser.add_argument('--batch_size', dest='batch_size', default= '256', type=int)
     parser.add_argument('--output_dir', dest='output_dir', default= '../output', type=str)
     parser.add_argument('--inference', dest='inference', default=False, type=bool)
+    parser.add_argument('--visualize_loss', dest='visualize_loss', default=False, type=bool)
     args = parser.parse_args()
     return args
 
@@ -102,8 +101,8 @@ def test():
         plt.imsave(os.path.join(cfg.OUTPUT_DIR, 'visualizations', f"image_{d['file_name'].split('/')[-1]}"), img)
         print(f"IMG saved to path: {os.path.join(cfg.OUTPUT_DIR, 'visualizations')}")
 
-def inference():
-    
+
+def inference():    
     cfg = config()
     cfg.MODEL.WEIGHTS = os.path.join(cfg.OUTPUT_DIR, "model_final.pth")
     cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5
