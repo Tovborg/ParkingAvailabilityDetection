@@ -55,7 +55,10 @@ def config():
     cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = args.batch_size  # faster, and good enough for this toy dataset (default: 512)
     cfg.MODEL.ROI_HEADS.NUM_CLASSES = 3 
     cfg.TEST.EVAL_PERIOD = args.evaluation_period
-    cfg.MODEL.DEVICE = "cuda"
+    if torch.cuda.is_available():
+        cfg.MODEL.DEVICE = "cuda"
+    else:
+        cfg.MODEL.DEVICE = "cpu"
     cfg.OUTPUT_DIR = args.output_dir
     return cfg
 
